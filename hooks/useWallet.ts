@@ -1,0 +1,123 @@
+import { useCallback, useEffect, useState } from "react";
+import { Alert } from "react-native";
+import {
+  clearAll,
+  loadBalance,
+  loadTransactions,
+  saveBalance,
+  saveTransactions,
+} from "../lib/storage";
+import type { SortOrder, Transaction } from "../types";
+
+function makeId(): string {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+export function useWallet() {
+  const [balance, setBalance] = useState(0);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const [b, txs] = await Promise.all([loadBalance(), loadTransactions()]);
+      setBalance(b);
+      setTransactions(txs);
+      setHydrated(true);
+    })();
+  }, []);
+
+  const addMoney = useCallback(
+    async (amountInput: number) => {
+      const amount = Math.abs(Number(amountInput));
+      if (!Number.isFinite(amount) || amount <= 0) {
+        Alert.alert("Invalid amount", "Please enter a positive number.");
+        return false;
+      }
+      const next = balance + amount;
+      setBalance(next);
+      await saveBalance(next);
+      return true;
+    },
+    [balance],
+  );
+
+  const spend = useCallback(
+    async (amountInput: number, reason: string) => {
+      const amount = Math.abs(Number(amountInput));
+      if (!Number.isFinite(amount) || amount <= 0) {
+        Alert.alert("Invalid amount", "Please enter a positive number.");
+        return false;
+      }
+      if (amount > balance) {
+        Alert.alert(
+          "Not enough balance",
+          "Amount must be less than or equal to current balance.",
+        );
+        return false;
+      }
+      const tx: Transaction = {
+        id: makeId(),
+        amount,
+        reason: reason.trim() || "Untitled",
+        createdAt: new Date().toISOString(),
+      };
+      const nextTxs = [...transactions, tx];
+      const nextBalance = balance - amount;
+      setTransactions(nextTxs);
+      setBalance(nextBalance);
+      await Promise.all([saveTransactions(nextTxs), saveBalance(nextBalance)]);
+      return true;
+    },
+    [balance, transactions],
+  );
+
+  const deleteTransaction = useCallback(
+    async (id: string) => {
+      const target = transactions.find((t) => t.id === id);
+      if (!target) return;
+      const nextTxs = transactions.filter((t) => t.id !== id);
+      const nextBalance = balance + target.amount;
+      setTransactions(nextTxs);
+      setBalance(nextBalance);
+      await Promise.all([saveTransactions(nextTxs), saveBalance(nextBalance)]);
+    },
+    [balance, transactions],
+  );
+
+  const resetAll = useCallback(() => {
+    Alert.alert(
+      "Reset everything?",
+      "This will erase your balance and all transactions.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Reset",
+          style: "destructive",
+          onPress: async () => {
+            setBalance(0);
+            setTransactions([]);
+            await clearAll();
+          },
+        },
+      ],
+    );
+  }, []);
+
+  const toggleSortOrder = useCallback(() => {
+    setSortOrder((o) => (o === "asc" ? "desc" : "asc"));
+  }, []);
+
+  return {
+    hydrated,
+    balance,
+    transactions,
+    sortOrder,
+    addMoney,
+    spend,
+    deleteTransaction,
+    resetAll,
+    toggleSortOrder,
+  };
+}
