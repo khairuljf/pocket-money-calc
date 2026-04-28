@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.khairul.pocketmoney"
+      "bundleIdentifier": "com.khairul.pocketmoney",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.khairul.pocketmoney",
@@ -28,6 +31,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "865d814f-b871-426f-8cff-21f605b037ae"
+      }
     }
   }
 }

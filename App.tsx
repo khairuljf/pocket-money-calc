@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  ScrollView,
   Text,
   View,
 } from "react-native";
@@ -59,36 +58,28 @@ export default function App() {
                     : "bg-slate-100 opacity-50"
                 }`}
               >
-                <Trash2
-                  color={hasData ? "#e11d48" : "#94a3b8"}
-                  size={18}
-                />
+                <Trash2 color={hasData ? "#e11d48" : "#94a3b8"} size={18} />
               </Pressable>
             </View>
 
-            <ScrollView
-              className="flex-1"
-              contentContainerClassName="gap-3 pb-4"
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
-            >
-              <BalanceCard
-                balance={balance}
-                onAddPress={() => setAddModalOpen(true)}
-              />
-              <SpendForm
-                disabled={!hydrated || balance <= 0}
-                onSpend={spend}
-              />
-              <View className="mt-2" style={{ minHeight: 320 }}>
-                <TransactionList
-                  transactions={transactions}
-                  sortOrder={sortOrder}
-                  onToggleSort={toggleSortOrder}
-                  onDelete={deleteTransaction}
-                />
-              </View>
-            </ScrollView>
+            <TransactionList
+              transactions={transactions}
+              sortOrder={sortOrder}
+              onToggleSort={toggleSortOrder}
+              onDelete={deleteTransaction}
+              ListHeaderComponent={
+                <View className="gap-3">
+                  <BalanceCard
+                    balance={balance}
+                    onAddPress={() => setAddModalOpen(true)}
+                  />
+                  <SpendForm
+                    disabled={!hydrated || balance <= 0}
+                    onSpend={spend}
+                  />
+                </View>
+              }
+            />
           </View>
         </KeyboardAvoidingView>
         <AddMoneyModal
