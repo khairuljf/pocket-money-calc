@@ -56,7 +56,7 @@ export function AddMoneyModal({ visible, onClose, onAdd }: Props) {
                 <X color="#475569" size={20} />
               </Pressable>
             </View>
-            <AddMoneyForm onAdd={handleAdd} variant="bare" autoFocus />
+            <AddMoneyForm onAdd={handleAdd} autoFocus />
           </View>
         </KeyboardAvoidingView>
       </View>

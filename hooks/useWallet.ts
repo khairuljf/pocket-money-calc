@@ -3,8 +3,10 @@ import { Alert } from "react-native";
 import {
   clearAll,
   loadBalance,
+  loadRevertOnDelete,
   loadTransactions,
   saveBalance,
+  saveRevertOnDelete,
   saveTransactions,
 } from "../lib/storage";
 import type { SortOrder, Transaction } from "../types";
@@ -17,13 +19,19 @@ export function useWallet() {
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [revertOnDelete, setRevertOnDeleteState] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const [b, txs] = await Promise.all([loadBalance(), loadTransactions()]);
+      const [b, txs, revert] = await Promise.all([
+        loadBalance(),
+        loadTransactions(),
+        loadRevertOnDelete(),
+      ]);
       setBalance(b);
       setTransactions(txs);
+      setRevertOnDeleteState(revert);
       setHydrated(true);
     })();
   }, []);
@@ -78,12 +86,15 @@ export function useWallet() {
       const target = transactions.find((t) => t.id === id);
       if (!target) return;
       const nextTxs = transactions.filter((t) => t.id !== id);
-      const nextBalance = balance + target.amount;
+      const nextBalance = revertOnDelete ? balance + target.amount : balance;
       setTransactions(nextTxs);
-      setBalance(nextBalance);
-      await Promise.all([saveTransactions(nextTxs), saveBalance(nextBalance)]);
+      if (revertOnDelete) setBalance(nextBalance);
+      await Promise.all([
+        saveTransactions(nextTxs),
+        revertOnDelete ? saveBalance(nextBalance) : Promise.resolve(),
+      ]);
     },
-    [balance, transactions],
+    [balance, transactions, revertOnDelete],
   );
 
   const resetAll = useCallback(() => {
@@ -109,15 +120,22 @@ export function useWallet() {
     setSortOrder((o) => (o === "asc" ? "desc" : "asc"));
   }, []);
 
+  const setRevertOnDelete = useCallback(async (value: boolean) => {
+    setRevertOnDeleteState(value);
+    await saveRevertOnDelete(value);
+  }, []);
+
   return {
     hydrated,
     balance,
     transactions,
     sortOrder,
+    revertOnDelete,
     addMoney,
     spend,
     deleteTransaction,
     resetAll,
     toggleSortOrder,
+    setRevertOnDelete,
   };
 }

@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "Pocket Money",
+    "name": "Pocket Money Calculator",
     "slug": "pocket-money-calculator",
     "version": "1.0.0",
+    "description": "Simple, offline-first pocket money tracker. Log expenses with a reason, watch your balance update live, filter history by month or day, and export PDF reports. Currency follows your phone, no account, no ads.",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -36,6 +37,9 @@
       "eas": {
         "projectId": "865d814f-b871-426f-8cff-21f605b037ae"
       }
-    }
+    },
+    "plugins": [
+      "expo-localization"
+    ]
   }
 }

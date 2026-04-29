@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { Trash2 } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
+import { useCurrency } from "../lib/currency";
 import type { Transaction } from "../types";
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 
 export function TransactionRow({ tx, onDelete }: Props) {
   const date = dayjs(tx.createdAt);
+  const { formatNegative } = useCurrency();
   return (
     <View className="flex-row items-center border-b border-slate-100 bg-white px-4 py-3">
       <View className="flex-1">
@@ -21,7 +23,7 @@ export function TransactionRow({ tx, onDelete }: Props) {
         </Text>
       </View>
       <Text className="mr-3 text-base font-semibold text-rose-600">
-        -{tx.amount.toLocaleString()}/-
+        {formatNegative(tx.amount)}
       </Text>
       <Pressable
         onPress={() => onDelete(tx.id)}

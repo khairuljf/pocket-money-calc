@@ -1,5 +1,6 @@
 import { Plus, Wallet } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
+import { useCurrency } from "../lib/currency";
 
 type Props = {
   balance: number;
@@ -7,6 +8,7 @@ type Props = {
 };
 
 export function BalanceCard({ balance, onAddPress }: Props) {
+  const { format } = useCurrency();
   return (
     <View className="flex-row items-center rounded-2xl bg-emerald-600 px-5 py-5 shadow">
       <View className="mr-4 h-12 w-12 items-center justify-center rounded-full bg-white/20">
@@ -17,8 +19,7 @@ export function BalanceCard({ balance, onAddPress }: Props) {
           Current Balance
         </Text>
         <Text className="mt-1 text-3xl font-bold text-white">
-          {balance.toLocaleString()}
-          <Text className="text-lg font-medium text-emerald-100">/-</Text>
+          {format(balance)}
         </Text>
       </View>
       <Pressable
