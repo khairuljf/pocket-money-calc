@@ -3,7 +3,7 @@
     "name": "PocketCash",
     "slug": "pocket-money-calculator",
     "version": "1.0.0",
-    "description": "PocketCash — your daily expense tracker, pocket money manager, and budget calculator in one simple offline app. Log expenses with a reason, watch your balance update live, filter history by month or day, and export PDF reports. Currency follows your phone, no account, no ads.",
+    "description": "PocketCash is a free offline expense tracker, daily spending log, pocket money manager, and budget calculator. Track cash, log expenses with notes, see your balance update live, filter history by month or day, and export PDF reports. Auto-detects your currency. No account, no ads, no internet needed — your data stays on your phone.",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
