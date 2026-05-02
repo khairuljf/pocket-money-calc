@@ -13,6 +13,7 @@
     "dayjs": "^1.11.20",
     "expo": "~54.0.33",
     "expo-constants": "~18.0.13",
+    "expo-dev-client": "~6.0.21",
     "expo-localization": "~17.0.8",
     "expo-print": "~15.0.8",
     "expo-sharing": "~14.0.8",

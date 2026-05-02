@@ -1,6 +1,7 @@
 import { Minus } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
+import { sanitizeAmountInput } from "../lib/currency";
 
 type Props = {
   disabled: boolean;
@@ -33,8 +34,8 @@ export function SpendForm({ disabled, onSpend }: Props) {
       <View className="flex-row gap-2">
         <TextInput
           value={amount}
-          onChangeText={setAmount}
-          keyboardType="numeric"
+          onChangeText={(t) => setAmount(sanitizeAmountInput(t))}
+          keyboardType="decimal-pad"
           editable={!disabled}
           placeholder="Amount"
           placeholderTextColor="#94a3b8"

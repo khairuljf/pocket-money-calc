@@ -2,7 +2,6 @@ import { X } from "lucide-react-native";
 import {
   KeyboardAvoidingView,
   Modal,
-  Platform,
   Pressable,
   Text,
   View,
@@ -36,9 +35,7 @@ export function AddMoneyModal({ visible, onClose, onAdd }: Props) {
           onPress={onClose}
           className="absolute inset-0 bg-black/50"
         />
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-        >
+        <KeyboardAvoidingView behavior="padding">
           <View className="rounded-t-3xl bg-white px-5 pb-8 pt-3">
             <View className="mb-3 items-center">
               <View className="h-1.5 w-12 rounded-full bg-slate-300" />

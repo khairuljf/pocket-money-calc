@@ -81,6 +81,40 @@ export function useWallet() {
     [balance, transactions],
   );
 
+  const editTransaction = useCallback(
+    async (id: string, amountInput: number, reason: string) => {
+      const amount = Math.abs(Number(amountInput));
+      if (!Number.isFinite(amount) || amount <= 0) {
+        Alert.alert("Invalid amount", "Please enter a positive number.");
+        return false;
+      }
+      const target = transactions.find((t) => t.id === id);
+      if (!target) return false;
+      const delta = amount - target.amount;
+      const nextBalance = balance - delta;
+      if (nextBalance < 0) {
+        Alert.alert(
+          "Not enough balance",
+          "New amount is more than the available balance.",
+        );
+        return false;
+      }
+      const nextTxs = transactions.map((t) =>
+        t.id === id
+          ? { ...t, amount, reason: reason.trim() || "Untitled" }
+          : t,
+      );
+      setTransactions(nextTxs);
+      if (delta !== 0) setBalance(nextBalance);
+      await Promise.all([
+        saveTransactions(nextTxs),
+        delta !== 0 ? saveBalance(nextBalance) : Promise.resolve(),
+      ]);
+      return true;
+    },
+    [balance, transactions],
+  );
+
   const deleteTransaction = useCallback(
     async (id: string) => {
       const target = transactions.find((t) => t.id === id);
@@ -133,6 +167,7 @@ export function useWallet() {
     revertOnDelete,
     addMoney,
     spend,
+    editTransaction,
     deleteTransaction,
     resetAll,
     toggleSortOrder,

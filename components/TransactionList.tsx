@@ -19,6 +19,7 @@ type Props = {
   transactions: Transaction[];
   sortOrder: SortOrder;
   onToggleSort: () => void;
+  onEdit: (tx: Transaction) => void;
   onDelete: (id: string) => void;
   ListHeaderComponent?: ReactElement | null;
 };
@@ -27,6 +28,7 @@ export function TransactionList({
   transactions,
   sortOrder,
   onToggleSort,
+  onEdit,
   onDelete,
   ListHeaderComponent,
 }: Props) {
@@ -159,7 +161,7 @@ export function TransactionList({
         </View>
       )}
       renderItem={({ item }) => (
-        <TransactionRow tx={item} onDelete={onDelete} />
+        <TransactionRow tx={item} onEdit={onEdit} onDelete={onDelete} />
       )}
     />
   );

@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
+import { sanitizeAmountInput } from "../lib/currency";
 
 type Props = {
   onAdd: (amount: number) => Promise<boolean>;
@@ -27,8 +28,8 @@ export function AddMoneyForm({ onAdd, autoFocus = false }: Props) {
     <View>
       <TextInput
         value={value}
-        onChangeText={setValue}
-        keyboardType="numeric"
+        onChangeText={(t) => setValue(sanitizeAmountInput(t))}
+        keyboardType="decimal-pad"
         placeholder="Enter amount"
         placeholderTextColor="#94a3b8"
         className="rounded-lg border border-slate-300 bg-slate-50 px-3 py-3 text-base text-slate-900"

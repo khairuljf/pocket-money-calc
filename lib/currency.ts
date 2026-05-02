@@ -33,6 +33,12 @@ const LOCALE_TAG = pickLocaleTag();
 
 export const DEVICE_CURRENCY_CODE = DEVICE_CURRENCY;
 
+export function sanitizeAmountInput(text: string): string {
+  const cleaned = text.replace(/[^\d.]/g, "");
+  const parts = cleaned.split(".");
+  return parts.length <= 1 ? cleaned : parts[0] + "." + parts.slice(1).join("");
+}
+
 function makeFormatters(code: string) {
   const full = new Intl.NumberFormat(LOCALE_TAG, {
     style: "currency",

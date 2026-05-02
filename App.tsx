@@ -20,12 +20,14 @@ import { AboutScreen } from "./components/AboutScreen";
 import { AddMoneyModal } from "./components/AddMoneyModal";
 import { BalanceCard } from "./components/BalanceCard";
 import { ContactScreen } from "./components/ContactScreen";
+import { EditTransactionModal } from "./components/EditTransactionModal";
 import { MenuDrawer } from "./components/MenuDrawer";
 import { SettingsScreen } from "./components/SettingsScreen";
 import { SpendForm } from "./components/SpendForm";
 import { TransactionList } from "./components/TransactionList";
 import { useWallet } from "./hooks/useWallet";
 import { CurrencyProvider } from "./lib/currency";
+import type { Transaction } from "./types";
 
 export default function App() {
   const {
@@ -36,6 +38,7 @@ export default function App() {
     revertOnDelete,
     addMoney,
     spend,
+    editTransaction,
     deleteTransaction,
     resetAll,
     toggleSortOrder,
@@ -47,6 +50,7 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [editingTx, setEditingTx] = useState<Transaction | null>(null);
   const hasData = balance > 0 || transactions.length > 0;
 
   return (
@@ -74,7 +78,7 @@ export default function App() {
                   className="flex-1 text-center text-lg font-bold text-slate-900"
                   numberOfLines={1}
                 >
-                  Pocket Money Calculator
+                  PocketCash
                 </Text>
                 <Pressable
                   onPress={() => setSettingsOpen(true)}
@@ -91,6 +95,7 @@ export default function App() {
                 transactions={transactions}
                 sortOrder={sortOrder}
                 onToggleSort={toggleSortOrder}
+                onEdit={setEditingTx}
                 onDelete={deleteTransaction}
                 ListHeaderComponent={
                   <View className="gap-3">
@@ -132,6 +137,11 @@ export default function App() {
             visible={addModalOpen}
             onClose={() => setAddModalOpen(false)}
             onAdd={addMoney}
+          />
+          <EditTransactionModal
+            transaction={editingTx}
+            onClose={() => setEditingTx(null)}
+            onSave={editTransaction}
           />
           <Modal
             visible={settingsOpen}

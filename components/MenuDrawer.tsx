@@ -95,7 +95,7 @@ export function MenuDrawer({
               className="flex-1 pr-2 text-lg font-bold text-slate-900"
               numberOfLines={1}
             >
-              Pocket Money Calculator
+              PocketCash
             </Text>
             <Pressable
               onPress={onClose}

@@ -28,7 +28,7 @@ export function AboutScreen({ onBack }: Props) {
       <ScrollView contentContainerStyle={{ padding: 20 }}>
         <View className="mb-4 items-center">
           <Text className="text-2xl font-bold text-slate-900">
-            Pocket Money Calculator
+            PocketCash
           </Text>
           <Text className="mt-1 text-sm text-slate-500">
             Version {version}
